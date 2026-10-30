@@ -197,6 +197,11 @@ func (store *Store) CurrentSession(ctx context.Context, token string) (CurrentSe
 	if err != nil || !found {
 		return CurrentSession{}, false, err
 	}
+
+	if row.RevokedAt != nil && *row.RevokedAt != "" {
+		return CurrentSession{}, false, nil
+	}
+
 	return CurrentSession{
 		Session: Session{
 			UserID:              row.UserID,
